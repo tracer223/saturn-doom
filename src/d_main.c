@@ -2,10 +2,12 @@
 
 #include <stdint.h>
 
+#ifndef YAUL_DOOM
 #include "elib/elib.h"
 #include "elib/m_argv.h"
 #include "hal/hal_input.h"
 #include "hal/hal_timer.h"
+#endif
 #include "doomdef.h"
 #include "g_options.h"
  
@@ -271,6 +273,10 @@ mobj_t	emptymobj;
 int MiniLoop(void (*start)(void), void (*stop)(void),
              int (*ticker)(void), void (*drawer)(void))
 {
+#ifdef YAUL_DOOM
+   // TODO: implement this function without hal code.
+   return 0;
+#else
    int exit;
    int buttons;
 
@@ -374,6 +380,7 @@ int MiniLoop(void (*start)(void), void (*stop)(void),
    players[0].mo = players[1].mo = &emptymobj; // for net consistancy checks
 
    return exit;
+#endif
 } 
 
 //=============================================================================
@@ -392,7 +399,11 @@ int TIC_Abortable(void)
    if(ticbuttons[0] == (BT_OPTION|BT_STAR|BT_HASH))
    {
       // reset eeprom memory
+#ifdef YAUL_DOOM
+      void Jag68k_main(void);
+#else
       void Jag68k_main(int argc, const char *const *argv);
+#endif
 
       ClearEEProm();
       pl = W_CacheLumpName("defaults", PU_STATIC);
@@ -403,7 +414,11 @@ int TIC_Abortable(void)
       while((junk = I_GetTime()) < count + 240)
          ;
       // CALICO_FIXME: this is a pretty bad idea for us.
+#ifdef YAUL_DOOM
+      Jag68k_main();
+#else
       Jag68k_main(myargc, myargv);
+#endif
    }
 
    if((ticbuttons[0] & (BT_A|JP_SPEED)) && !(oldticbuttons[0] & (BT_A|JP_SPEED))) // CALICO: allow dedicated actions also
@@ -426,7 +441,9 @@ void START_Title(void)
    DoubleBufferSetup();
    titlepic = W_CacheLumpName("title", PU_STATIC);
    S_StartSong(mus_intro, 0);
+#ifndef YAUL_DOOM
    hal_appstate.setGrabState(HAL_FALSE); // CALICO: don't grab input
+#endif
 }
 
 void STOP_Title(void)
@@ -448,7 +465,9 @@ void START_Credits(void)
    backgroundpic = W_POINTLUMPNUM(W_GetNumForName("M_TITLE"));
    DoubleBufferSetup();
    titlepic = W_CacheLumpName("credits", PU_STATIC);
+#ifndef YAUL_DOOM
    hal_appstate.setGrabState(HAL_FALSE); // CALICO: don't grab input
+#endif
 }
 
 void STOP_Credits(void)
@@ -559,6 +578,7 @@ void RunMenu(void)
    }
 }
 
+#ifndef YAUL_DOOM
 //
 // Check for gameplay-affecting command-line arguments
 //
@@ -587,6 +607,7 @@ static void D_CheckGameArguments(void)
    fastparm   = (boolean)(M_FindArgument("-fast"));       // -fast
    nomonsters = (boolean)(M_FindArgument("-nomonsters")); // -nomonsters   
 }
+#endif
 
 //============================================================================-
  
@@ -618,8 +639,10 @@ void D_DoomMain(void)
    ST_Init();
    O_Init();
 
+#ifndef YAUL_DOOM
    // CALICO: check for -warp
    D_CheckGameArguments();
+#endif
 
    //==========================================================================
 

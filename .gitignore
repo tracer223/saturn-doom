@@ -15,5 +15,5 @@
 .*.swp
 .DS_store
 \#*\#
-
+*.vs**
 build/
