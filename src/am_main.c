@@ -1,8 +1,12 @@
 /* am_main.c -- automap */
 
+#ifdef YAUL_DOOM
+#include <yaul.h>
+#else
 #include "renderintr/ri_interface.h"
 #include "rb/rb_common.h"
 #include "jagcry.h"
+#endif
 #include "doomdef.h"
 #include "p_local.h"
 
@@ -57,12 +61,15 @@ static uint32_t *framebuffer; // CALICO: framebuffer pointer
 //=================================================================
 void AM_Start(void)
 {
+   // YAUL_TODO: rewrite
+#ifndef YAUL_DOOM
    scale = 3;
    showAllThings = showAllLines = 0;
    players[consoleplayer].automapflags &= ~AF_ACTIVE;
    
    // CALICO: get framebuffer pointer
    framebuffer = g_renderer->GetFramebuffer(FB_160);
+#endif
 }
 
 //=================================================================
@@ -123,7 +130,12 @@ void DrawLine(pixel_t color, int x1, int y1, int x2, int y2)
    int x, y;
    uint32_t *a1ptr;
 
+#ifdef YAUL_DOOM
+   // YAUL_TODO: rewrite
+   quadcolor = 0;
+#else
    quadcolor = CRYToRGB[color];
+#endif
 
    dx  = x2 - x1;
    adx = dx < 0 ? -dx : dx;
@@ -332,8 +344,11 @@ void AM_Drawer(void)
    int       yshift;
    int       drawn; // HOW MANY LINES DRAWN?
 
+   // YAUL_TODO: rewrite
+#ifndef YAUL_DOOM
    // CALICO: Clear playfield framebuffer
    g_renderer->ClearFramebuffer(FB_160, RB_COLOR_BLACK);
+#endif
 
    p = &players[consoleplayer];
    ox = p->automapx;

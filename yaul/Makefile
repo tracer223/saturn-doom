@@ -14,8 +14,6 @@ SH_SRCS:= \
     ../src/g_game.c \
     ../src/in_main.c \
     ../src/info.c \
-    ../src/j_eeprom.c \
-    ../src/jagcry.c \
     ../src/jagonly.c \
     ../src/m_main.c \
     ../src/o_main.c \

@@ -1,6 +1,10 @@
 /* G_game.c  */
 
+#ifdef YAUL_DOOM
+#include <yaul.h>
+#else
 #include "hal/hal_input.h"
+#endif
 #include "doomdef.h" 
 #include "g_options.h"
 #include "p_local.h" 

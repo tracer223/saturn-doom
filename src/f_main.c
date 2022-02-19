@@ -1,9 +1,13 @@
 /* f_main.c -- finale */
 
+#ifdef YAUL_DOOM
+#include <yaul.h>
+#else
 #include "hal/hal_input.h"
 #include "renderintr/ri_interface.h"
-#include "doomdef.h"
 #include "jagcry.h"
+#endif
+#include "doomdef.h"
 #include "r_local.h"
 
 extern int mystrlen(const char *string);
@@ -21,9 +25,7 @@ void BufferedDrawSprite(int sprite, int frame, int rotation)
 {
    spritedef_t   *sprdef;
    spriteframe_t *sprframe;
-   patch_t       *patch;
-   patch_t        tpatch;    // CALICO
-   uint32_t      *fb, *dest; // CALICO
+   patch_t       *patch, *tp_patch;   
    byte          *pixels, *src, pix;
    int            count;
    int            x, sprleft, sprtop;
@@ -31,6 +33,12 @@ void BufferedDrawSprite(int sprite, int frame, int rotation)
    int            lump;
    boolean        flip;
    int            texturecolumn;
+#ifdef YAUL_DOOM
+   byte*          dest;
+#else
+   patch_t        tpatch;    // CALICO
+   uint32_t* fb, * dest; // CALICO
+#endif
 
    if(sprite < 0 || sprite >= NUMSPRITES)
       I_Error("BufferedDrawSprite: invalid sprite number %i ", sprite);
@@ -55,26 +63,35 @@ void BufferedDrawSprite(int sprite, int frame, int rotation)
    sprtop  = 90;
    sprleft = 80;
 
+#ifdef YAUL_DOOM
+   // YAUL_TODO: rewrite
+   sprtop -= patch->topoffset;
+   sprleft -= patch->leftoffset;
+   tp_patch = patch;
+#else
    // CALICO: copy properties out of patch to correct for endianness
    tpatch.topoffset  = BIGSHORT(patch->topoffset);
    tpatch.leftoffset = BIGSHORT(patch->leftoffset);
    tpatch.width      = BIGSHORT(patch->width);
    tpatch.height     = BIGSHORT(patch->height);
-
+   
    sprtop  -= tpatch.topoffset;
    sprleft -= tpatch.leftoffset;
+
+   tp_patch = &tpatch;
 
    // CALICO: get framebuffer dest
    fb = g_renderer->GetFramebuffer(FB_320);
    g_renderer->FramebufferSetUpdated(FB_320);
+#endif
 
    //
    // draw it by hand
    //
-   for(x = 0; x < tpatch.width; x++)
+   for(x = 0; x < tp_patch->width; x++)
    {
       if(flip)
-         texturecolumn = tpatch.width - 1 - x;
+         texturecolumn = tp_patch->width - 1 - x;
       else
          texturecolumn = x;
 
@@ -85,9 +102,14 @@ void BufferedDrawSprite(int sprite, int frame, int rotation)
       //
       for(; column->topdelta != 0xff; column++)
       {
+#ifdef YAUL_DOOM
+         // YAUL_TODO: rewrite, insert framebuffer here
+         dest = (byte*)((sprtop + column->topdelta) * 640 + (sprleft + x) * 2);
+#else
          // calculate unclipped screen coordinates for post
          // CALICO: draw to framebuffer
          dest  = fb + (sprtop + column->topdelta) * 640 + (sprleft + x) * 2;
+#endif
          count = column->length;
          src   = pixels + BIGSHORT(column->dataofs); // CALICO: endianness
          while(count--)
@@ -95,7 +117,11 @@ void BufferedDrawSprite(int sprite, int frame, int rotation)
             pix = *src++;
             if(!pix)
                pix = 8;
+#ifdef YAUL_DOOM
+            dest[0] = dest[1] = dest[320] = dest[321] = pix;
+#else
             dest[0] = dest[1] = dest[320] = dest[321] = CRYToRGB[palette8[pix]];
+#endif
             dest += 640;
          }
       }
@@ -272,7 +298,10 @@ void F_Start(void)
    int i;
    int l;
 
+   // YAUL_TODO: address this
+#ifndef YAUL_DOOM
    hal_appstate.setGrabState(HAL_FALSE); // CALICO: don't grab input
+#endif
 
    S_StartSong(2, 1);
 

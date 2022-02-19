@@ -5,7 +5,11 @@
 
 #include <stdarg.h>
 #include <stddef.h>
+#ifdef YAUL_DOOM
+#include "yaul/y_keywords.h"
+#else
 #include "keywords.h"
+#endif
 
 // JAGUAR should be defined on the compiler command line for console builds
 // if MARS isn't defined, assume jaguar version

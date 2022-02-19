@@ -2,7 +2,9 @@
 
 #include <stdint.h>
 
-#ifndef YAUL_DOOM
+#ifdef YAUL_DOOM
+#include <yaul.h>
+#else
 #include "elib/elib.h"
 #include "elib/m_argv.h"
 #include "hal/hal_input.h"
@@ -274,7 +276,7 @@ int MiniLoop(void (*start)(void), void (*stop)(void),
              int (*ticker)(void), void (*drawer)(void))
 {
 #ifdef YAUL_DOOM
-   // TODO: implement this function without hal code.
+   // YAUL_TODO: implement this function without hal code.
    return 0;
 #else
    int exit;

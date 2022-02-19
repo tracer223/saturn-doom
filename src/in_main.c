@@ -1,6 +1,11 @@
 
 /* in_main.c -- intermission */
+
+#ifdef YAUL_DOOM
+#include <yaul.h>
+#else
 #include "hal/hal_input.h"
+#endif
 #include "doomdef.h"
 #include "st_main.h"
 

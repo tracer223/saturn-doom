@@ -6,7 +6,11 @@
 #ifndef DOOMDATA_H__
 #define DOOMDATA_H__
 
+#ifdef YAUL_DOOM
+#include "yaul/y_keywords.h"
+#else
 #include "keywords.h"
+#endif
 
 /*
 ===============================================================================

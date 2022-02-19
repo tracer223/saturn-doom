@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#ifdef YAUL_DOOM
+#include <yaul.h>
+#else
 #include "elib/configfile.h"
 #include "elib/m_argv.h"
 #include "hal/hal_init.h"
@@ -12,8 +15,9 @@
 #include "hal/hal_video.h"
 #include "renderintr/ri_interface.h"
 #include "rb/rb_common.h"
-#include "doomdef.h"
 #include "jagcry.h"
+#endif
+#include "doomdef.h"
 #include "r_local.h"
 #include "w_iwad.h"
 
@@ -83,6 +87,8 @@ static hal_bool ShouldGrabInput(void)
 //
 void Jag68k_main(int argc, const char *const *argv)
 {
+   // YAUL_TODO: Write yaul version of this init code.
+#ifndef YAUL_DOOM
    // CALICO: initialize HAL
    if(!HAL_Init())
       hal_platform.fatalError("HAL initialization failed");
@@ -141,6 +147,7 @@ void Jag68k_main(int argc, const char *const *argv)
 
    // load defaults
    ReadEEProm();
+#endif
 
    // start doom
    D_DoomMain();
@@ -735,6 +742,8 @@ void DoubleBufferSetup(void)
 //
 void EraseBlock(int x, int y, int width, int height, void *destResource)
 {
+   // YAUL_TODO: write yaul version
+#ifndef YAUL_DOOM
    uint32_t *base, *dest;
 
    if(x < 0)
@@ -780,6 +789,7 @@ void EraseBlock(int x, int y, int width, int height, void *destResource)
 
       dest += CALICO_ORIG_SCREENWIDTH;
    }
+#endif
 }
 
 //

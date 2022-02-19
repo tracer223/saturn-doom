@@ -30,12 +30,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef YAUL_DOOM
+#include <yaul.h>
+#include "yaul/y_keywords.h"
+#else
 #include "elib/elib.h"
 #include "elib/m_argv.h"
 #include "elib/misc.h"
 #include "hal/hal_ml.h"
 #include "hal/hal_platform.h"
 #include "keywords.h"
+#endif
 #include "w_iwad.h"
 
 typedef enum wfiletype_e

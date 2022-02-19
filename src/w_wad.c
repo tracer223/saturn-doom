@@ -4,7 +4,11 @@
   WAD File Management
 */
 
+#ifdef YAUL_DOOM
+#include "yaul/y_keywords.h"
+#else
 #include "keywords.h"
+#endif
 #include "doomdef.h"
 
 //===============
