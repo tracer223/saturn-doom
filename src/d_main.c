@@ -402,7 +402,7 @@ int TIC_Abortable(void)
    {
       // reset eeprom memory
 #ifdef YAUL_DOOM
-      void Jag68k_main(void);
+      void Jag68k_main();
 #else
       void Jag68k_main(int argc, const char *const *argv);
 #endif

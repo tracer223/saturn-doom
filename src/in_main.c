@@ -258,7 +258,9 @@ void IN_Start(void)
 {
    int i, l;
 
+#ifndef YAUL_DOOM
    hal_appstate.setGrabState(HAL_FALSE); // CALICO: don't grab input
+#endif
 
    earlyexit = false;
 

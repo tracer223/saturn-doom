@@ -370,7 +370,9 @@ void G_RunGame(void)
       G_DoLoadLevel();
 
       // run a level until death or completion
+#ifndef YAUL_DOOM
       hal_appstate.setGrabState(HAL_TRUE); // CALICO: grab input
+#endif
       MiniLoop(P_Start, P_Stop, P_Ticker, P_Drawer);
 
       // take away cards and stuff
@@ -428,7 +430,9 @@ int G_PlayDemoPtr(int *demo)
    int exit;
    int skill, map;
 
+#ifndef YAUL_DOOM
    hal_appstate.setGrabState(HAL_FALSE); // CALICO: don't grab input
+#endif
 
    demobuffer = demo;
 
@@ -459,7 +463,9 @@ int G_PlayDemoPtr(int *demo)
 // CALICO_FIXME: go to file
 void G_RecordDemo(void)
 {
+#ifndef YAUL_DOOM
    hal_appstate.setGrabState(HAL_TRUE); // CALICO: grab input
+#endif
    demo_p = demobuffer = Z_Malloc(0x8000, PU_STATIC, NULL);
 
    // CALICO: these must be corrected for endianness (dst format is big-endian)

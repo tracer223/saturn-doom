@@ -7,6 +7,7 @@ include $(YAUL_INSTALL_ROOT)/share/pre.common.mk
 SH_PROGRAM:= doom
 SH_SRCS:= \
     ../src/yaul/yaul_main.c \
+    ../src/yaul/y_stdlib.c \
     ../src/am_main.c \
     ../src/comnjag.c \
     ../src/d_main.c \
@@ -62,8 +63,12 @@ SH_SRCS:= \
     ../src/z_zone.c
 
 SH_LIBRARIES:=
+# DISABLING OF ERRORS IS TEMPORARY!
 SH_CFLAGS+= -O2 -I../src -save-temps=obj -DYAUL_DOOM \
-    -Wno-unused-parameter # TEMPORARY!!
+    -Wno-unused-parameter \
+    -Wno-unused-variable \
+    -Wno-unused-but-set-variable
+
 
 IP_VERSION:= V1.000
 IP_RELEASE_DATE:= 20160101

@@ -5,6 +5,7 @@
 
 #ifdef YAUL_DOOM
 #include <yaul.h>
+#include "yaul/y_stdlib.h"
 #else
 #include "elib/configfile.h"
 #include "elib/m_argv.h"
@@ -62,6 +63,7 @@ int junk;
 
 char hexdigits[] = "0123456789ABCDEF";
 
+#ifndef YAUL_DOOM
 void ReadEEProm(void);
 
 static void I_GetFramebuffer(void);
@@ -73,6 +75,7 @@ static hal_bool ShouldGrabInput(void)
 {
    return !gamepaused;
 }
+#endif
 
 /* 
 ================ 
@@ -85,7 +88,11 @@ static hal_bool ShouldGrabInput(void)
 //
 // Main routine.
 //
+#ifdef YAUL_DOOM
+void Jag68k_main()
+#else
 void Jag68k_main(int argc, const char *const *argv)
+#endif
 {
    // YAUL_TODO: Write yaul version of this init code.
 #ifndef YAUL_DOOM
@@ -217,14 +224,18 @@ byte font8[] =
 //
 void I_Print8(int x, int y, char *string)
 {
+
    int c;
    byte *source;
    uint32_t *dest;
 
+   // YAUL_TODO: rewrite
+#ifndef YAUL_DOOM
    // CALICO: also output as a debug message
-   hal_platform.debugMsg(string);
-   
+   hal_platform.debugMsg(string);   
    g_renderer->TextureResourceSetUpdated(debugscreenrez);
+#endif
+
    if(y > 224/8)
       return;
 
@@ -240,6 +251,7 @@ void I_Print8(int x, int y, char *string)
 
       source = font8 + ((c - 32) << 3);
 
+#ifndef YAUL_DOOM
       d = dest;
       for(i = 0; i < 7; i++)
       {
@@ -253,6 +265,7 @@ void I_Print8(int x, int y, char *string)
          }
          d += 256;
       }
+#endif
 
       dest += 8;
       ++x;
@@ -272,12 +285,17 @@ void I_Error(const char *error, ...)
    I_Print8(0, 25, errormessage);
    debugscreenactive = true;
    I_Update();
+
+#ifndef YAUL_DOOM
    hal_appstate.setGrabState(HAL_FALSE); // CALICO: ungrab input
+#endif
    while(1)
    {
+#ifndef YAUL_DOOM
       // CALICO: run event loop
       hal_input.getEvents();
       hal_timer.delay(1);
+#endif
    }
 } 
 
@@ -307,8 +325,10 @@ void I_DrawSbar(void)
    width  = (unsigned int)(BIGSHORT(sbar->width));
    height = (unsigned int)(BIGSHORT(sbar->height));
 
+#ifndef YAUL_DOOM
    if(!sbarrez)
       sbarrez = g_renderer->NewTextureResource("STBAR", sbar->data, width, height, RES_8BIT, 0);
+#endif
 
    // CALICO_TODO: network patch
 #if 0
@@ -365,8 +385,13 @@ byte *I_WadBase(void)
    if(!wadbase)
    {
       // CALICO: load from disk
-      if(!(wadbase = W_LoadIWAD()))
+      if (!(wadbase = W_LoadIWAD()))
+      {
+         // YAUL_TODO: support debug logging
+#ifndef YAUL_DOOM
          hal_platform.fatalError("I_WadBase: could not load IWAD file");
+#endif
+      }
    }
 
    return wadbase;
@@ -398,8 +423,13 @@ byte *I_ZoneBase(int *size)
    // CALICO: allocate from C heap
    if(!zonebase)
    {
-      if(!(zonebase = calloc(*size, 1)))
+      if (!(zonebase = calloc(*size, 1)))
+      {
+         // YAUL_TODO: support debug logging
+#ifndef YAUL_DOOM
          hal_platform.fatalError("I_ZoneBase: could not allocate %d bytes for zone", size);
+#endif
+      }
    }
 
    return zonebase;
@@ -416,8 +446,11 @@ int I_ReadControls(void)
    int stoptic, i, cumulative;
    int ticcount = I_GetTime();
 
+   // YAUL_TODO: implement input
+#ifndef YAUL_DOOM
    // CALICO: run event loop
    joypad[ticcount&31] = hal_input.getEvents();
+#endif
 
    stoptic = ticcount;
    if(stoptic - oldticcount > 4)
@@ -440,7 +473,12 @@ int I_ReadControls(void)
 //
 int I_GetTime(void)
 {
+#ifdef YAUL_DOOM
+   // YAUL_TODO: implement time
+   return 0;
+#else
    return (int)(hal_timer.getTime());
+#endif
 }
 
 //
@@ -468,6 +506,10 @@ fixed_t FixedDiv(fixed_t a, fixed_t b)
 //
 //=============================================================================
 
+#ifdef YAUL_DOOM
+// YAUL_TODO: implement frame buffer
+static byte* framebuffer_p;
+#else
 static uint32_t *framebuffer160_p, *framebuffer320_p;
 
 //
@@ -475,16 +517,19 @@ static uint32_t *framebuffer160_p, *framebuffer320_p;
 //
 static void I_GetFramebuffer(void)
 {
+
    g_renderer->InitFramebufferTextures();
    framebuffer160_p = g_renderer->GetFramebuffer(FB_160);
    framebuffer320_p = g_renderer->GetFramebuffer(FB_320);
 }
+#endif
 
 extern pixel_t shadepixel;
 
 struct cextender_s { signed int ext:4; }; // sign extender for 4-bit CRY chroma component
 struct iextender_s { signed int ext:8; }; // sign extender for 8-bit CRY luminance component
 
+#ifndef YAUL_DOOM
 //
 // CALICO: Blend a CRY color with the value of the shadepixel color add object
 //
@@ -511,6 +556,7 @@ static inline inpixel_t I_BlendCRY(inpixel_t in)
 
    return (inpixel_t)((cc << CRY_CSHIFT) | (cr << CRY_RSHIFT) | (cy << CRY_YSHIFT));
 }
+#endif
 
 // Sign extender for 24-bit CRY luminance values
 struct yextender_s { signed int ext:24; };
@@ -538,13 +584,19 @@ void I_DrawColumn(int dc_x, int dc_yl, int dc_yh, int light, fixed_t frac,
       I_Error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
 #endif
 
+#ifdef YAUL_DOOM
+   // YAUL_TODO: implement frame buffer
+   dest = (uint32_t*)(framebuffer_p + dc_yl * SCREENWIDTH + dc_x);
+#else
    // CALICO: our destination framebuffer is 32-bit
    dest = framebuffer160_p + dc_yl * SCREENWIDTH + dc_x;
+#endif
 
    heightmask = dc_texheight - 1;
 
    do
    {
+#ifndef YAUL_DOOM
       // CALICO: calculate CRY lighting and lookup RGB
       cry = dc_source[(frac >> FRACBITS) & heightmask];
       y = (cry & CRY_YMASK) << CRY_IINCSHIFT;
@@ -554,11 +606,13 @@ void I_DrawColumn(int dc_x, int dc_yl, int dc_yh, int light, fixed_t frac,
       y >>= CRY_IINCSHIFT;
       cry = (cry & CRY_COLORMASK) | (y & 0xff);
       
+
       // CALICO: apply screen shading if active
       if(shadepixel)
          cry = I_BlendCRY(cry);
  
       *dest = CRYToRGB[cry];
+#endif
       dest += SCREENWIDTH;
       frac += fracstep;
    }
@@ -589,8 +643,13 @@ void I_DrawColumnNPO2(int dc_x, int dc_yl, int dc_yh, int light, fixed_t frac,
       I_Error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
 #endif
 
+#ifdef YAUL_DOOM
+   // YAUL_TODO: implement frame buffer
+   dest = (uint32_t*)(framebuffer_p + dc_yl * SCREENWIDTH + dc_x);
+#else
    // CALICO: our destination framebuffer is 32-bit
    dest = framebuffer160_p + dc_yl * SCREENWIDTH + dc_x;
+#endif
 
    heightmask = dc_texheight << FRACBITS;
 
@@ -604,6 +663,7 @@ void I_DrawColumnNPO2(int dc_x, int dc_yl, int dc_yh, int light, fixed_t frac,
 
    do
    {
+#ifndef YAUL_DOOM
       cry = dc_source[frac >> FRACBITS];
       y = (cry & CRY_YMASK) << CRY_IINCSHIFT;
       y += (s.ext = light);
@@ -617,6 +677,7 @@ void I_DrawColumnNPO2(int dc_x, int dc_yl, int dc_yh, int light, fixed_t frac,
          cry = I_BlendCRY(cry);
 
       *dest = CRYToRGB[cry];
+#endif
       dest += SCREENWIDTH;
 
       if((frac += fracstep) >= heightmask)
@@ -645,12 +706,18 @@ void I_DrawSpan(int ds_y, int ds_x1, int ds_x2, int light, fixed_t ds_xfrac,
    xfrac = ds_xfrac; 
    yfrac = ds_yfrac; 
 
+#ifdef YAUL_DOOM
+   // YAUL_TODO: implement frame buffer
+   dest = (uint32_t*)(framebuffer_p + ds_y * SCREENWIDTH + ds_x1);
+#else
    // CALICO: our destination framebuffer is 32-bit
    dest = framebuffer160_p + ds_y * SCREENWIDTH + ds_x1;
+#endif
    count = ds_x2 - ds_x1;
 
    do 
    { 
+#ifndef YAUL_DOOM
       // CALICO: calculate CRY lighting and lookup RGB
       cry = ds_source[((yfrac >> (16 - 6)) & (63 * 64)) + ((xfrac >> 16) & 63)];
       y = (cry & CRY_YMASK) << CRY_IINCSHIFT;
@@ -665,6 +732,7 @@ void I_DrawSpan(int ds_y, int ds_x1, int ds_x2, int light, fixed_t ds_xfrac,
          cry = I_BlendCRY(cry);
 
       *dest++ = CRYToRGB[cry];
+#endif
       xfrac += ds_xstep; 
       yfrac += ds_ystep; 
    }
@@ -688,6 +756,8 @@ int lasttics;
 //
 void I_Update(void) 
 {
+   // YAUL_TODO: rewrite!
+#ifndef YAUL_DOOM
    g_renderer->UpdateFramebuffer(FB_160);
    g_renderer->AddFramebuffer(FB_160);
    g_renderer->AddDrawCommand(sbarrez, 0, 2 + SCREENHEIGHT + 1, 320, 40);
@@ -695,6 +765,7 @@ void I_Update(void)
    if(debugscreenactive)
       g_renderer->AddDrawCommand(debugscreenrez, 0, 0, 256, 224);
    g_renderer->RenderFrame();
+#endif
 }
 
 static byte tempbuffer[0x10000];
@@ -724,6 +795,8 @@ extern int cy;
 //
 void DoubleBufferSetup(void)
 {
+   // YAUL_TODO: rewrite
+#ifndef YAUL_DOOM
    // set up new list
    while(!I_RefreshCompleted())
       ;
@@ -732,6 +805,7 @@ void DoubleBufferSetup(void)
    g_renderer->ClearTextureResource(debugscreenrez, RB_COLOR_CLEAR);
 
    cy = 4;
+#endif
 }
 
 //
@@ -771,7 +845,11 @@ void EraseBlock(int x, int y, int width, int height, void *destResource)
    }
    else
    {
+
+      // YAUL_TODO: implement frame buffer
+      //base = framebuffer_p;
       base = framebuffer320_p;
+
       g_renderer->FramebufferSetUpdated(FB_320);
       y += 8;
    }
@@ -828,6 +906,8 @@ void DrawJagobj(jagobj_t *jo, int x, int y, void *destResource)
    if(width < 1 || height < 1)
       return;
 
+   // YAUL_TODO: rewrite
+#ifndef YAUL_DOOM
    if(destResource)
    {
       base = g_renderer->GetTextureResourceStore(destResource);
@@ -835,8 +915,12 @@ void DrawJagobj(jagobj_t *jo, int x, int y, void *destResource)
    }
    else
    {
+
+      // YAUL_TODO: implement frame buffer ??
+      //base = framebuffer_p;
       base = framebuffer320_p;
       g_renderer->FramebufferSetUpdated(FB_320);
+
       y += 8;
    }
 
@@ -857,6 +941,7 @@ void DrawJagobj(jagobj_t *jo, int x, int y, void *destResource)
       source += rowsize;
       dest += CALICO_ORIG_SCREENWIDTH;
    }
+#endif
 }
 
 void DoubleBufferObjList(void);
@@ -867,10 +952,14 @@ void DoubleBufferObjList(void);
 //
 void UpdateBuffer(void)
 {
+   // YAUL_TODO: rewrite
+#ifndef YAUL_DOOM
    DoubleBufferObjList();
    g_renderer->RenderFrame();
+#endif
 }
 
+#ifndef YAUL_DOOM
 //
 // Draw the title screen background
 // CALICO: Separated out of DoubleBufferObjList
@@ -912,17 +1001,21 @@ void DrawMTitle(void)
 
    g_renderer->AddDrawCommand(m_titleres, sx, sy, width, height);
 }
+#endif
 
 //
 // Double-buffered refresh
 //
 void DoubleBufferObjList(void)
 {
+   // YAUL_TODO: rewrite
+#ifndef YAUL_DOOM
    DrawMTitle();
    g_renderer->UpdateFramebuffer(FB_320);
    g_renderer->AddFramebuffer(FB_320);
    if(debugscreenactive)
       g_renderer->AddDrawCommand(debugscreenrez, 0, 0, 256, 224);
+#endif
 }
 
 //=============================================================================
@@ -930,7 +1023,7 @@ void DoubleBufferObjList(void)
 // EEPROM
 //
 //=============================================================================
-
+#ifndef YAUL_DOOM
 #define IDWORD (('D'<<8)+'1')
 
 unsigned short eeread(int address);
@@ -1012,6 +1105,7 @@ void WriteEEProm(void)
    for(i = 0; i < EEWORDS; i++)
       eewrite(eeprombuffer[i], i);
 }
+#endif
 
 //=============================================================================
 //
@@ -1119,7 +1213,10 @@ void Player0Setup(void)
    /* wait until we see a 0x22 from other side */
    do
    {
+      // YAUL_TODO: implement input
+#ifndef YAUL_DOOM
       joystick1 = hal_input.getEvents(); // CALICO
+#endif
 
       if(joystick1 == JP_OPTION)
       {
@@ -1150,8 +1247,11 @@ void Player1Setup(void)
    oldval = 999;
    do
    {
+      // YAUL_TODO: implement input
+#ifndef YAUL_DOOM
       joystick1 = hal_input.getEvents(); // CALICO
-      
+#endif
+
       if(joystick1 == JP_OPTION)
       {
          starttype = gt_single;
@@ -1313,8 +1413,15 @@ reconnect:
       I_Wait(15); // let player 0 wait again
 
    I_NetSetup();
-   if(starttype == gt_single)
+   if (starttype == gt_single)
+   {
+#ifdef YAUL_DOOM
+      Jag68k_main();
+#else
       Jag68k_main(myargc, myargv);
+#endif
+   }
+      
 
    G_PlayerReborn(0);
    G_PlayerReborn(1);
