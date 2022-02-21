@@ -192,11 +192,11 @@ fixed_t	P_FindNextHighestFloor(doom_sector_t *sec,int currentheight)
 /* FIND LOWEST CEILING IN THE SURROUNDING SECTORS */
 /* */
 /*================================================================== */
-fixed_t	P_FindLowestCeilingSurrounding(sector_t *sec)
+fixed_t	P_FindLowestCeilingSurrounding(doom_sector_t *sec)
 {
    int       i;
    line_t   *check;
-   sector_t *other;
+   doom_sector_t *other;
    fixed_t   height = D_MAXINT;
 
    for(i = 0; i < sec->linecount; i++)
