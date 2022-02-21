@@ -131,7 +131,7 @@ static boolean PA_ShootLine(line_t *li, fixed_t interceptfrac)
 {
    fixed_t   slope;
    fixed_t   dist;
-   sector_t *front, *back;
+   doom_sector_t *front, *back;
    fixed_t   opentop, openbottom;
 
    if(!(li->flags & ML_TWOSIDED))

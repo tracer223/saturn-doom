@@ -19,7 +19,7 @@ cliprange_t *newend;
 cliprange_t  solidsegs[MAXSEGS];
 seg_t       *curline;
 angle_t      lineangle1;
-sector_t    *frontsector;
+doom_sector_t    *frontsector;
 
 //
 // To get a global angle from Cartesian coordinates, the coordinates are
@@ -338,7 +338,7 @@ void R_AddLine(seg_t *line)
 {
    angle_t angle1, angle2, span, tspan;
    fixed_t x1, x2;
-   sector_t *backsector;
+   doom_sector_t *backsector;
 
    curline = line;
 

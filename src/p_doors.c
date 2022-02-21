@@ -111,7 +111,7 @@ void T_VerticalDoor(vldoor_t *door)
 int EV_DoDoor(line_t *line, vldoor_e  type)
 {
    int       secnum,rtn;
-   sector_t *sec;
+   doom_sector_t *sec;
    vldoor_t *door;
 
    secnum = -1;
@@ -171,7 +171,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
 {
    player_t *player;
    int       secnum;
-   sector_t *sec;
+   doom_sector_t *sec;
    vldoor_t *door;
    int       side;
 
@@ -327,7 +327,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
 /* Spawn a door that closes after 30 seconds */
 /* */
 /*================================================================== */
-void P_SpawnDoorCloseIn30(sector_t *sec)
+void P_SpawnDoorCloseIn30(doom_sector_t *sec)
 {
    vldoor_t *door;
 
@@ -348,7 +348,7 @@ void P_SpawnDoorCloseIn30(sector_t *sec)
 /* Spawn a door that opens after 5 minutes */
 /* */
 /*================================================================== */
-void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
+void P_SpawnDoorRaiseIn5Mins(doom_sector_t *sec, int secnum)
 {
    vldoor_t *door;
 

@@ -427,8 +427,8 @@ typedef struct seg_s
 12:   angle_t   angle;       // this is not used (keep for padding)
 16:   side_t   *sidedef;
 20:   line_t   *linedef;
-24:   sector_t *frontsector;
-28:   sector_t *backsector;  // NULL for one sided lines
+24:   doom_sector_t *frontsector;
+28:   doom_sector_t *backsector;  // NULL for one sided lines
 } seg_t;
 
 typedef struct line_s
@@ -443,8 +443,8 @@ typedef struct line_s
 28: VINT         sidenum[2];               // sidenum[1] will be -1 if one sided
 36: fixed_t      bbox[4];
 52: slopetype_t  slopetype;                // to aid move clipping
-56: sector_t    *frontsector;
-60: sector_t    *backsector;
+56: doom_sector_t    *frontsector;
+60: doom_sector_t    *backsector;
 64: int          validcount;               // if == validcount, already checked
 68: void        *specialdata;              // thinker_t for reversable actions
 72: int          fineangle;                // to get sine / cosine for sliding
@@ -457,7 +457,7 @@ typedef struct
  8:  VINT      toptexture;
 12:  VINT      bottomtexture;
 16:  VINT      midtexture;
-20:  sector_t *sector;
+20:  doom_sector_t *sector;
 } side_t;
 
 typedef	struct
@@ -478,11 +478,11 @@ typedef	struct
 84:   void   *specialdata;                 // thinker_t for reversable actions
 88:   VINT    linecount;
 92:   struct line_s **lines;               // [linecount] size
-} sector_t;
+} doom_sector_t;
 
 typedef struct subsector_s
 {
-0:   sector_t *sector;
+0:   doom_sector_t *sector;
 4:   VINT      numlines;
 8:   VINT      firstline;
 } subsector_t;

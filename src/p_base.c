@@ -158,7 +158,7 @@ static boolean PB_BoxCrossLine(line_t *ld)
 static boolean PB_CheckLine(line_t *ld)
 {
    fixed_t   opentop, openbottom, lowfloor;
-   sector_t *front, *back;
+   doom_sector_t *front, *back;
 
    // The moving thing's destination position will cross the given line.
    // if this should not be allowed, return false.

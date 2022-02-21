@@ -23,15 +23,15 @@
 */
 
 mobj_t   *soundtarget;
-sector_t *na_sec;
+doom_sector_t *na_sec;
 int       na_secnum;
 
-void P_RecursiveSound(sector_t *sec, int soundblocks)
+void P_RecursiveSound(doom_sector_t *sec, int soundblocks)
 {
    int       i;
    line_t   *check;
-   sector_t *other;
-   sector_t *front, *back;
+   doom_sector_t *other;
+   doom_sector_t *front, *back;
 
    na_sec    = sec; /* DEBUG */
    na_secnum = (int)(sec-sectors);
@@ -76,7 +76,7 @@ void P_RecursiveSound(sector_t *sec, int soundblocks)
 
 void P_NoiseAlert (player_t *player)
 {
-   sector_t	*sec;
+   doom_sector_t	*sec;
 
    sec = player->mo->subsector->sector;
 

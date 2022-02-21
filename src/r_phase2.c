@@ -7,7 +7,7 @@
 #include "doomdef.h"
 #include "r_local.h"
 
-static sector_t emptysector = { 0, 0, -2, -2, -2 };
+static doom_sector_t emptysector = { 0, 0, -2, -2, -2 };
 
 void R_WallPrep(void)
 {
@@ -15,7 +15,7 @@ void R_WallPrep(void)
    seg_t     *seg;
    line_t    *li;
    side_t    *si;
-   sector_t  *front_sector, *back_sector;
+   doom_sector_t  *front_sector, *back_sector;
    fixed_t    f_floorheight, f_ceilingheight;
    fixed_t    b_floorheight, b_ceilingheight;
    int        f_lightlevel, b_lightlevel;
