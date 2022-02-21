@@ -7,7 +7,7 @@
 #include "doomdef.h"
 #include "r_local.h"
 
-static sector_t emptysector = { 0, 0, -2, -2, -2 };
+static doom_sector_t emptysector = { 0, 0, -2, -2, -2 };
 
 void R_WallPrep(void)
 {
