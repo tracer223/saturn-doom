@@ -53,7 +53,7 @@ int EV_Teleport( line_t *line,mobj_t *thing )
    boolean  flag;
    mobj_t   *m,*fog;
    unsigned int	an;
-   sector_t *sector;
+   doom_sector_t *sector;
    fixed_t   oldx, oldy, oldz;
    int       side;
 	

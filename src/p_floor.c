@@ -16,7 +16,7 @@
 /* Move a plane (floor or ceiling) and check for crushing */
 /* */
 /*================================================================== */
-result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crush,
+result_e T_MovePlane(doom_sector_t *sector, fixed_t speed, fixed_t dest, boolean crush,
                      int floorOrCeiling, int direction)
 {
    boolean	flag;
@@ -200,7 +200,7 @@ int EV_DoFloor(line_t *line,floor_e floortype)
    int secnum;
    int rtn;
    int i;
-   sector_t    *sec;
+   doom_sector_t    *sec;
    floormove_t *floor;
 
    secnum = -1;
@@ -350,7 +350,7 @@ int EV_BuildStairs(line_t *line)
    int          texture;
    int          ok;
    int          rtn;
-   sector_t    *sec, *tsec;
+   doom_sector_t    *sec, *tsec;
    floormove_t *floor;
 
    secnum = -1;

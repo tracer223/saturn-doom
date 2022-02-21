@@ -10,7 +10,7 @@ vertex_t    *vertexes;
 int          numsegs;
 seg_t       *segs;
 int          numsectors;
-sector_t    *sectors;
+doom_sector_t    *sectors;
 int          numsubsectors;
 subsector_t *subsectors;
 int          numnodes;
@@ -120,7 +120,7 @@ void P_LoadSubsectors(int lump)
    byte *data;
    int   i;
    mapsubsector_t *ms;
-   subsector_t    *ss;
+   doom_sector_t    *ss;
 
    numsubsectors = W_LumpLength(lump) / sizeof(mapsubsector_t);
    subsectors    = Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, 0);
@@ -150,11 +150,11 @@ void P_LoadSectors(int lump)
    byte *data;
    int   i;
    mapsector_t *ms;
-   sector_t    *ss;
+   doom_sector_t    *ss;
 
    numsectors = W_LumpLength(lump) / sizeof(mapsector_t);
-   sectors    = Z_Malloc(numsectors * sizeof(sector_t), PU_LEVEL, 0);
-   D_memset(sectors, 0, numsectors * sizeof(sector_t));
+   sectors    = Z_Malloc(numsectors * sizeof(doom_sector_t), PU_LEVEL, 0);
+   D_memset(sectors, 0, numsectors * sizeof(doom_sector_t));
    data = I_TempBuffer();
    W_ReadLump(lump, data);
 
@@ -419,7 +419,7 @@ void P_GroupLines(void)
 {
    line_t      **linebuffer;
    int           i, j, total;
-   sector_t     *sector;
+   doom_sector_t     *sector;
    subsector_t  *ss;
    seg_t        *seg;
    int           block;

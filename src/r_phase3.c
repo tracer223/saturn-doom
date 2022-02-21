@@ -138,7 +138,7 @@ void R_SpritePrep(void)
    while(ssp < lastvissubsector)
    {
       subsector_t *ss = *ssp;
-      sector_t    *se = ss->sector;
+      doom_sector_t    *se = ss->sector;
 
       if(se->validcount != validcount) // not already processed?
       {

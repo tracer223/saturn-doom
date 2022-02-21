@@ -70,14 +70,14 @@ typedef struct
    void   *specialdata;                 // thinker_t for reversable actions
    VINT    linecount;
    struct line_s **lines;               // [linecount] size
-} sector_t;
+} doom_sector_t;
 
 typedef struct
 {
    fixed_t   textureoffset; // add this to the calculated texture col
    fixed_t   rowoffset;     // add this to the calculated texture top
    VINT      toptexture, bottomtexture, midtexture;
-   sector_t *sector;
+   doom_sector_t *sector;
 } side_t;
 
 typedef enum 
@@ -97,7 +97,7 @@ typedef struct line_s
    VINT         sidenum[2];               // sidenum[1] will be -1 if one sided
    fixed_t      bbox[4];
    slopetype_t  slopetype;                // to aid move clipping
-   sector_t    *frontsector, *backsector;
+   doom_sector_t    *frontsector, *backsector;
    int          validcount;               // if == validcount, already checked
    void        *specialdata;              // thinker_t for reversable actions
    int          fineangle;                // to get sine / cosine for sliding
@@ -105,7 +105,7 @@ typedef struct line_s
 
 typedef struct subsector_s
 {
-   sector_t *sector;
+   doom_sector_t *sector;
    VINT      numlines;
    VINT      firstline;
 } subsector_t;
@@ -117,8 +117,8 @@ typedef struct seg_s
    angle_t   angle;       // this is not used (keep for padding)
    side_t   *sidedef;
    line_t   *linedef;
-   sector_t *frontsector;
-   sector_t *backsector;  // NULL for one sided lines
+   doom_sector_t *frontsector;
+   doom_sector_t *backsector;  // NULL for one sided lines
 } seg_t;
 
 typedef struct
@@ -186,7 +186,7 @@ extern int           numsegs;
 extern seg_t        *segs;
 
 extern int          numsectors;
-extern sector_t    *sectors;
+extern doom_sector_t    *sectors;
 
 extern int          numsubsectors;
 extern subsector_t *subsectors;

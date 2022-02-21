@@ -123,8 +123,8 @@ static boolean PS_CrossSubsector(int num)
    int          s2;
    int          count;
    subsector_t *sub;
-   sector_t    *front;
-   sector_t    *back;
+   doom_sector_t    *front;
+   doom_sector_t    *back;
    fixed_t      opentop;
    fixed_t      openbottom;
    divline_t    divl;

@@ -152,7 +152,7 @@ blockmove:
 static boolean SL_CheckLine(line_t *ld)
 {
    fixed_t   opentop, openbottom;
-   sector_t *front, *back;
+   doom_sector_t *front, *back;
    int       side1;
    vertex_t *vtmp;
 

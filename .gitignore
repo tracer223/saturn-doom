@@ -18,3 +18,4 @@
 *.vs**
 build/
 *.wad
+yaul/compile_commands.json

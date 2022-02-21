@@ -65,16 +65,16 @@ void    P_CrossSpecialLine(line_t *line, mobj_t *thing);
 void    P_PlayerInSpecialSector(player_t *player);
 
 int twoSided(int sector, int line);
-sector_t *getSector(int currentSector,int line,int side);
+doom_sector_t *getSector(int currentSector,int line,int side);
 side_t   *getSide(int currentSector,int line, int side);
-fixed_t P_FindLowestFloorSurrounding(sector_t *sec);
-fixed_t P_FindHighestFloorSurrounding(sector_t *sec);
-fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight);
-fixed_t P_FindLowestCeilingSurrounding(sector_t *sec);
-fixed_t P_FindHighestCeilingSurrounding(sector_t *sec);
+fixed_t P_FindLowestFloorSurrounding(doom_sector_t *sec);
+fixed_t P_FindHighestFloorSurrounding(doom_sector_t *sec);
+fixed_t P_FindNextHighestFloor(doom_sector_t *sec, int currentheight);
+fixed_t P_FindLowestCeilingSurrounding(doom_sector_t *sec);
+fixed_t P_FindHighestCeilingSurrounding(doom_sector_t *sec);
 int     P_FindSectorFromLineTag(line_t *line,int start);
-int     P_FindMinSurroundingLight(sector_t *sector,int max);
-sector_t *getNextSector(line_t *line,sector_t *sec);
+int     P_FindMinSurroundingLight(doom_sector_t *sector,int max);
+doom_sector_t *getNextSector(line_t *line,doom_sector_t *sec);
 
 /* */
 /* SPECIAL */
@@ -91,7 +91,7 @@ P_LIGHTS
 typedef struct
 {
    thinker_t  thinker;
-   sector_t  *sector;
+   doom_sector_t  *sector;
    int        count;
    int        maxlight;
    int        minlight;
@@ -102,7 +102,7 @@ typedef struct
 typedef struct
 {
    thinker_t  thinker;
-   sector_t  *sector;
+   doom_sector_t  *sector;
    int        count;
    int        minlight;
    int        maxlight;
@@ -113,7 +113,7 @@ typedef struct
 typedef struct
 {
    thinker_t  thinker;
-   sector_t  *sector;
+   doom_sector_t  *sector;
    int        minlight;
    int        maxlight;
    int        direction;
@@ -125,14 +125,14 @@ typedef struct
 #define	SLOWDARK     15
 
 void T_LightFlash(lightflash_t *flash);
-void P_SpawnLightFlash(sector_t *sector);
+void P_SpawnLightFlash(doom_sector_t *sector);
 void T_StrobeFlash(strobe_t *flash);
-void P_SpawnStrobeFlash(sector_t *sector, int fastOrSlow, int inSync);
+void P_SpawnStrobeFlash(doom_sector_t *sector, int fastOrSlow, int inSync);
 void EV_StartLightStrobing(line_t *line);
 void EV_TurnTagLightsOff(line_t	*line);
 void EV_LightTurnOn(line_t *line, int bright);
 void T_Glow(glow_t *g);
-void P_SpawnGlowingLight(sector_t *sector);
+void P_SpawnGlowingLight(doom_sector_t *sector);
 
 /*
 ===============================================================================
@@ -198,7 +198,7 @@ typedef enum
 typedef struct
 {
    thinker_t  thinker;
-   sector_t  *sector;
+   doom_sector_t  *sector;
    fixed_t    speed;
    fixed_t    low;
    fixed_t    high;
@@ -244,7 +244,7 @@ typedef struct
 {
    thinker_t  thinker;
    vldoor_e   type;
-   sector_t  *sector;
+   doom_sector_t  *sector;
    fixed_t    topheight;
    fixed_t    speed;
    int        direction;    /* 1 = up, 0 = waiting at top, -1 = down */
@@ -259,8 +259,8 @@ typedef struct
 void EV_VerticalDoor(line_t *line, mobj_t *thing);
 int  EV_DoDoor(line_t *line, vldoor_e  type);
 void T_VerticalDoor(vldoor_t *door);
-void P_SpawnDoorCloseIn30(sector_t *sec);
-void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum);
+void P_SpawnDoorCloseIn30(doom_sector_t *sec);
+void P_SpawnDoorRaiseIn5Mins(doom_sector_t *sec, int secnum);
 
 /*
 ===============================================================================
@@ -282,7 +282,7 @@ typedef struct
 {
    thinker_t  thinker;
    ceiling_e  type;
-   sector_t  *sector;
+   doom_sector_t  *sector;
    fixed_t    bottomheight, topheight;
    fixed_t    speed;
    boolean    crush;
@@ -330,7 +330,7 @@ typedef struct
    thinker_t  thinker;
    floor_e    type;
    boolean    crush;
-   sector_t  *sector;
+   doom_sector_t  *sector;
    int        direction;
    int        newspecial;
    short      texture;
@@ -347,7 +347,7 @@ typedef enum
    pastdest
 } result_e;
 
-result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crush,
+result_e T_MovePlane(doom_sector_t *sector, fixed_t speed, fixed_t dest, boolean crush,
                      int floorOrCeiling, int direction);
 
 int  EV_BuildStairs(line_t *line);

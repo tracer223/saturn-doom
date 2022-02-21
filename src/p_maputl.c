@@ -138,7 +138,7 @@ fixed_t	lowfloor;
 
 void P_LineOpening (line_t *linedef)
 {
-   sector_t *front, *back;
+   doom_sector_t *front, *back;
 
    if(linedef->sidenum[1] == -1)
    {
@@ -233,8 +233,8 @@ void P_UnsetThingPosition(mobj_t *thing)
 
 void P_SetThingPosition(mobj_t *thing)
 {
-   subsector_t  *ss;
-   sector_t     *sec;
+   subdoom_sector_t  *ss;
+   doom_sector_t     *sec;
    int           blockx, blocky;
    mobj_t      **link;
 

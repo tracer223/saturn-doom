@@ -191,7 +191,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y);
 boolean P_CheckSight(mobj_t *t1, mobj_t *t2);
 void    P_UseLines(player_t *player);
 
-boolean P_ChangeSector(sector_t *sector, boolean crunch);
+boolean P_ChangeSector(doom_sector_t *sector, boolean crunch);
 
 extern mobj_t *linetarget; /* who got hit (or NULL) */
 fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance);

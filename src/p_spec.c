@@ -68,10 +68,10 @@ side_t *getSide(int currentSector,int line, int side)
 }
 
 /* */
-/* Will return a sector_t* given the number of the current sector, */
+/* Will return a doom_sector_t* given the number of the current sector, */
 /* the line number and the side (0/1) that you want. */
 /* */
-sector_t *getSector(int currentSector,int line,int side)
+doom_sector_t *getSector(int currentSector,int line,int side)
 {
    return sides[(sectors[currentSector].lines[line])->sidenum[side]].sector;
 }
@@ -87,10 +87,10 @@ int twoSided(int sector,int line)
 
 /*================================================================== */
 /* */
-/* Return sector_t * of sector next to current. NULL if not two-sided line */
+/* Return doom_sector_t * of sector next to current. NULL if not two-sided line */
 /* */
 /*================================================================== */
-sector_t *getNextSector(line_t *line, sector_t *sec)
+doom_sector_t *getNextSector(line_t *line, doom_sector_t *sec)
 {
    if(!(line->flags & ML_TWOSIDED))
       return NULL;
@@ -106,11 +106,11 @@ sector_t *getNextSector(line_t *line, sector_t *sec)
 /* FIND LOWEST FLOOR HEIGHT IN SURROUNDING SECTORS */
 /* */
 /*================================================================== */
-fixed_t	P_FindLowestFloorSurrounding(sector_t *sec)
+fixed_t	P_FindLowestFloorSurrounding(doom_sector_t *sec)
 {
    int       i;
    line_t   *check;
-   sector_t *other;
+   doom_sector_t *other;
    fixed_t   floor = sec->floorheight;
 
    for(i = 0; i < sec->linecount; i++)
@@ -130,11 +130,11 @@ fixed_t	P_FindLowestFloorSurrounding(sector_t *sec)
 /* FIND HIGHEST FLOOR HEIGHT IN SURROUNDING SECTORS */
 /* */
 /*================================================================== */
-fixed_t	P_FindHighestFloorSurrounding(sector_t *sec)
+fixed_t	P_FindHighestFloorSurrounding(doom_sector_t *sec)
 {
    int       i;
    line_t   *check;
-   sector_t *other;
+   doom_sector_t *other;
    fixed_t   floor = -500*FRACUNIT;
 
    for(i = 0; i < sec->linecount; i++)
@@ -154,13 +154,13 @@ fixed_t	P_FindHighestFloorSurrounding(sector_t *sec)
 /*	FIND NEXT HIGHEST FLOOR IN SURROUNDING SECTORS */
 /* */
 /*================================================================== */
-fixed_t	P_FindNextHighestFloor(sector_t *sec,int currentheight)
+fixed_t	P_FindNextHighestFloor(doom_sector_t *sec,int currentheight)
 {
    int       i;
    int       h;
    int       min;
    line_t   *check;
-   sector_t *other;
+   doom_sector_t *other;
    fixed_t   height = currentheight;
    fixed_t   heightlist[20]; /* 20 adjoining sectors max! */
 
@@ -216,11 +216,11 @@ fixed_t	P_FindLowestCeilingSurrounding(sector_t *sec)
 /*	FIND HIGHEST CEILING IN THE SURROUNDING SECTORS */
 /* */
 /*================================================================== */
-fixed_t	P_FindHighestCeilingSurrounding(sector_t *sec)
+fixed_t	P_FindHighestCeilingSurrounding(doom_sector_t *sec)
 {
    int       i;
    line_t   *check;
-   sector_t *other;
+   doom_sector_t *other;
    fixed_t   height = 0;
 
    for(i = 0; i < sec->linecount; i++)
@@ -257,12 +257,12 @@ int P_FindSectorFromLineTag(line_t *line, int start)
 /* Find minimum light from an adjacent sector */
 /* */
 /*================================================================== */
-int P_FindMinSurroundingLight(sector_t *sector,int max)
+int P_FindMinSurroundingLight(doom_sector_t *sector,int max)
 {
    int       i;
    int       min;
    line_t   *line;
-   sector_t *check;
+   doom_sector_t *check;
 
    min = max;
    for(i = 0; i < sector->linecount; i++)
@@ -591,7 +591,7 @@ void P_ShootSpecialLine ( mobj_t *thing, line_t *line)
 
 void P_PlayerInSpecialSector (player_t *player)
 {
-   sector_t *sector;
+   doom_sector_t *sector;
 
    sector = player->mo->subsector->sector;
    if(player->mo->z != sector->floorheight)
@@ -709,9 +709,9 @@ void P_UpdateSpecials(void)
 /*============================================================ */
 int EV_DoDonut(line_t *line)
 {
-   sector_t *s1;
-   sector_t *s2;
-   sector_t *s3;
+   doom_sector_t *s1;
+   doom_sector_t *s2;
+   doom_sector_t *s3;
    int secnum;
    int rtn;
    int i;
@@ -792,7 +792,7 @@ line_t *linespeciallist[MAXLINEANIMS];
 
 void P_SpawnSpecials(void)
 {
-   sector_t *sector;
+   doom_sector_t *sector;
    int i;
 
    /* */
