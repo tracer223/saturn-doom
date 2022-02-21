@@ -6,6 +6,7 @@ include $(YAUL_INSTALL_ROOT)/share/pre.common.mk
 
 SH_PROGRAM:= doom
 SH_SRCS:= \
+    ../src/elib/m_argv.c \
     ../src/yaul/yaul_main.c \
     ../src/yaul/y_stdlib.c \
     ../src/am_main.c \
@@ -67,7 +68,16 @@ SH_LIBRARIES:=
 SH_CFLAGS+= -O2 -I../src -save-temps=obj -DYAUL_DOOM \
     -Wno-unused-parameter \
     -Wno-unused-variable \
-    -Wno-unused-but-set-variable
+    -Wno-unused-but-set-variable \
+    -Wno-sign-compare \
+    -Wno-incompatible-pointer-types \
+    -Wno-implicit-fallthrough \
+    -Wno-missing-field-initializers \
+    -Wno-type-limits \
+    -Wno-maybe-uninitialized \
+    -Wno-parentheses \
+    -Wno-implicit-function-declaration \
+    -Wno-int-conversion
 
 
 IP_VERSION:= V1.000
