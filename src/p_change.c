@@ -123,7 +123,7 @@ boolean PIT_ChangeSector(mobj_t *thing)
 ===============
 */
 
-boolean P_ChangeSector(sector_t *sector, boolean crunch)
+boolean P_ChangeSector(doom_sector_t *sector, boolean crunch)
 {
    int x, y;
    int i;
