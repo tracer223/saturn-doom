@@ -43,7 +43,9 @@
 
 //
 // Initialize the HAL layer with YAUL implementation function pointers
-//
+// Might be useful to write YAUL constants that correspond to different YAUL functionality,
+// This is the pre-existing code but replacing SDL with YAUL
+
 void YAUL_InitHAL(void)
 {
    // Basic interface
