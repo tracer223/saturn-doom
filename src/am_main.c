@@ -132,7 +132,7 @@ void DrawLine(pixel_t color, int x1, int y1, int x2, int y2)
 
 #ifdef YAUL_DOOM
    // YAUL_TODO: rewrite
-   quadcolor = 0;
+   color_rgb1555 quadcolor = COLOR_RGB1555(1, 0, 3, 15)
 #else
    quadcolor = CRYToRGB[color];
 #endif
@@ -347,7 +347,9 @@ void AM_Drawer(void)
    // YAUL_TODO: rewrite
 #ifndef YAUL_DOOM
    // CALICO: Clear playfield framebuffer
+   // YAUL_TODO: rewrite ri_interface.h
    g_renderer->ClearFramebuffer(FB_160, RB_COLOR_BLACK);
+
 #endif
 
    p = &players[consoleplayer];
